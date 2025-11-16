@@ -1,0 +1,38 @@
+# Load this file by adding the following to /homeassistant/configuration.yaml
+#
+# template: !include max_pv_sensors.yaml
+#
+# Or if you already a template section in the file add:
+#
+# template max_pv_sensors: !include max_pv_sensors.yaml
+#
+- trigger:
+    - platform: time_pattern
+      hours: 0
+      minutes: 0
+      id: 'midnight'
+    - platform: state
+      entity_id: sensor.lxp_bj44100287_pv_power_array
+      id: 'change'
+  sensor:
+    - name: Daily Max PV Power
+      unique_id: daily_max_pv_power
+      state: >
+        {% set outpv = states('sensor.lxp_bj44100287_pv_power_array') | int(0) %}
+        {% set maxpv = states('sensor.daily_max_pv_power') | int(0)  %}
+        {% if trigger.id == 'midnight' or outpv > maxpv %} {{ outpv }}
+        {% else %} {{ maxpv }} {% endif %}
+      unit_of_measurement: W
+        
+- trigger:
+    - platform: time_pattern
+      hours: 0
+      minutes: 0
+      id: 'midnight'
+    - platform: state
+      entity_id: sensor.daily_max_pv_power
+      id: 'change'
+  sensor:
+    - name: Daily Max PV Power Time
+      unique_id: daily_max_pv_power_time
+      state: "{{ now().strftime('%H:%M') }}"

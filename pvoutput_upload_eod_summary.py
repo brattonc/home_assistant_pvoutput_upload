@@ -75,6 +75,7 @@ def pvoutput_upload_eod_summary(apikey, systemid, lxpBridgeDatalog, upload=False
         "g": api_data["generated"],
         "e": api_data["exported"],
         "c": api_data["consumed"],
+        "ip": api_data["from_grid"],
     }
     
     if usePeakProduction:

@@ -63,7 +63,7 @@ def pvoutput_upload_eod_summary(apikey, systemid, lxpBridgeDatalog, upload=False
         api_data["peak_production"] = int(state.get("sensor.daily_max_pv_power"))
         api_data["peak_production_time"] = state.get("sensor.daily_max_pv_power_time")
     
-    api_data["consumed"] = api_data["generated"] - api_data["exported"] + api_data["from_grid"] + api_data["battery_discharge"]
+    api_data["consumed"] = api_data["generated"] - api_data["exported"] + api_data["from_grid"] + api_data["battery_discharge"] - api_data["battery_charge"]
     
     # We have to override the "exported" value otherwise pvoutput will throw an http 400
     # "exported" can be greater than "generated" if Forced Export is used to discharge batteries to grid.
